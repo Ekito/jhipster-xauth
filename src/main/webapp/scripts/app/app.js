@@ -40,24 +40,24 @@ angular.module('xauthApp', ['LocalStorageModule', 'tmh.dynamicLocale',
             }
         };
     })
-    
+
     .factory('authInterceptor', function ($rootScope, $q, $location, localStorageService) {
         return {
             // Add authorization token to headers
             request: function (config) {
                 config.headers = config.headers || {};
                 var token = localStorageService.get('token');
-                if (token && token.expires_at && token.expires_at > new Date().getTime()) {
-                    config.headers.Authorization = 'Bearer ' + token.access_token;
+                if (token && token.expires && token.expires > new Date().getTime()) {
+                    config.headers['x-auth-token'] = token.token;
                 }
                 return config;
             }
         };
     })
-    
+
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider, httpRequestInterceptorCacheBusterProvider) {
-        
-    
+
+
         //Cache everything except rest api requests
         httpRequestInterceptorCacheBusterProvider.setMatchlist([/.*rest.*/, /.*protected.*/], true);
 
@@ -83,10 +83,10 @@ angular.module('xauthApp', ['LocalStorageModule', 'tmh.dynamicLocale',
                 }]
             }
         });
-        
+
         $httpProvider.interceptors.push('authInterceptor');
 
-        // Initialize angular-translate    
+        // Initialize angular-translate
         $translateProvider.useLoader('$translatePartialLoader', {
             urlTemplate: 'i18n/{lang}/{part}.json'
         });

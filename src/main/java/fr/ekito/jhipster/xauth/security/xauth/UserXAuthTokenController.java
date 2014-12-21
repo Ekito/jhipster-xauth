@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +39,7 @@ public class UserXAuthTokenController {
     }
 
     @RequestMapping(value = "/api/authenticate", method = { RequestMethod.POST })
-    public UserTransfer authorize(@RequestParam String username, @RequestParam String password) {
+    public Token authorize(@RequestParam String username, @RequestParam String password) {
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = this.authenticationManager.authenticate(token);
@@ -48,40 +47,7 @@ public class UserXAuthTokenController {
 
         UserDetails details = this.userDetailsService.loadUserByUsername(username);
 
-        Map<String, Boolean> roles = new HashMap<String, Boolean>();
-        for (GrantedAuthority authority : details.getAuthorities())
-            roles.put(authority.toString(), Boolean.TRUE);
-
-        return new UserTransfer(details.getUsername(), roles, tokenProvider.createToken(details));
+        return tokenProvider.createToken(details);
     }
 
-    public static class UserTransfer {
-
-        private final String name;
-        private final Map<String, Boolean> roles;
-        private final String token;
-
-        public UserTransfer(String userName, Map<String, Boolean> roles, String token) {
-
-            Map<String, Boolean> mapOfRoles = new ConcurrentHashMap<String, Boolean>();
-            for (String k : roles.keySet())
-                mapOfRoles.put(k, roles.get(k));
-
-            this.roles = mapOfRoles;
-            this.token = token;
-            this.name = userName;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public Map<String, Boolean> getRoles() {
-            return this.roles;
-        }
-
-        public String getToken() {
-            return this.token;
-        }
-    }
 }

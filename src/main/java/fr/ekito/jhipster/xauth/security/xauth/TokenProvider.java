@@ -20,9 +20,10 @@ public class TokenProvider {
         this.secretKey = secretKey;
         this.tokenValidity = tokenValidity;
     }
-    public String createToken(UserDetails userDetails) {
+    public Token createToken(UserDetails userDetails) {
         long expires = System.currentTimeMillis() + 1000L * tokenValidity;
-        return userDetails.getUsername() + ":" + expires + ":" + computeSignature(userDetails, expires);
+        String token = userDetails.getUsername() + ":" + expires + ":" + computeSignature(userDetails, expires);
+        return new Token(token, expires);
     }
 
     public String computeSignature(UserDetails userDetails, long expires) {
