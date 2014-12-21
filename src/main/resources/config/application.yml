@@ -28,11 +28,10 @@ spring:
         cacheSeconds: 1
 
 authentication:
-    oauth:
-        clientid: xauthapp
-        secret: mySecretOAuthSecret
-        # Token is valid 30 minutes
-        tokenValidityInSeconds: 1800
+    xauth:
+        secret: mySecretXAuthSecret
+        # Token is valid 60 minutes
+        tokenValidityInSeconds: 3600
 
 swagger:
     title: xauth API
