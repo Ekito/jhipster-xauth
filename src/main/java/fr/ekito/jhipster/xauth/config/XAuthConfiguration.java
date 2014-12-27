@@ -6,15 +6,12 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 
 /**
  * Created by jboulay on 21/12/14.
  */
 @Configuration
-public class XAuthConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> implements EnvironmentAware {
+public class XAuthConfiguration implements EnvironmentAware {
 
     private RelaxedPropertyResolver propertyResolver;
 
