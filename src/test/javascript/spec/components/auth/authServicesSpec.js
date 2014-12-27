@@ -13,7 +13,6 @@ describe('Services Tests ', function () {
             authService = Auth;
             spiedAuthServerProvider = AuthServerProvider;
             //Request on app init
-            $httpBackend.expectPOST('api/logout').respond(200, '');
             var req = 'protected/authentication_check.gif';
             var regex_friendly_req = req.replace(/\//g, '\\/');
             var expected = new RegExp(regex_friendly_req + '\\?cacheBuster=[0-9]+');
@@ -34,10 +33,9 @@ describe('Services Tests ', function () {
             $httpBackend.verifyNoOutstandingRequest();
         });
 
-        it('should call backend on logout then call authServerProvider.logout', function(){
+        it('should call LocalStorageService.clearAll on logout', function(){
             //GIVEN
             //Set spy
-            spyOn(spiedAuthServerProvider, 'logout').and.callThrough();
             spyOn(spiedLocalStorageService, "clearAll").and.callThrough();
 
             //WHEN
@@ -46,7 +44,6 @@ describe('Services Tests ', function () {
             $httpBackend.flush();
 
             //THEN
-            expect(spiedAuthServerProvider.logout).toHaveBeenCalled();
             expect(spiedLocalStorageService.clearAll).toHaveBeenCalled();
         });
 
